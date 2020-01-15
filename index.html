@@ -1,0 +1,343 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>RobotKernel &mdash; robotkernel 1.3.1.dev0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+        <script type="text/javascript" src="https://unpkg.com/@jupyter-widgets/html-manager@^0.18.0/dist/embed-amd.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Running Code" href="notebooks/01 Running Code.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="#" class="icon icon-home"> robotkernel
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.3.1.dev0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/01 Running Code.html">Running Code</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/02 Python XKCD.html">Example: The latest XKCD in Python</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/03 Running Robot.html">Running Robot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/04 Robot XKCD.html">Example: The latest XKCD in Robot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/05 Interactive Selenium.html">Autocompleting Selenium locators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/06 Importing Notebooks.html">Importing notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/07 Prototyping Keywords.html">Prototyping Keywords</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/08 Interactive WhiteLibrary.html">WhiteLibrary Support</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/09 Prototyping Libraries.html">Prototyping Libraries</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">robotkernel</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#">Docs</a> &raquo;</li>
+        
+      <li>RobotKernel</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<div class="section" id="robotkernel">
+<h1>RobotKernel<a class="headerlink" href="#robotkernel" title="Permalink to this headline">¶</a></h1>
+<p>RobotKernel is a <a class="reference external" href="http://robotframework.org/">Robot Framework</a> <a class="reference external" href="https://ipython.org/">IPython</a> kernel for <a class="reference external" href="https://jupyter.readthedocs.io/en/latest/">Jupyter Notebook</a> and <a class="reference external" href="https://jupyterlab.readthedocs.io/en/stable/">JupyterLab</a>. It powers <a class="reference external" href="https://github.com/robots-from-jupyter/robotlab/releases">RobotLab</a> – the Robot Framework JupyterLab distribution.</p>
+<p>RobotKernel requires Python 3.6 or later and Robot Framework 3.1 or later.</p>
+<p>For alternative Robot Framework IPython kernel, check out <a class="reference external" href="https://github.com/gtri/irobotframework">ipythonrobotframework</a>.</p>
+<div class="section" id="try-robotkernel">
+<h2>Try RobotKernel<a class="headerlink" href="#try-robotkernel" title="Permalink to this headline">¶</a></h2>
+<p>You can try RobotKernel instantly without installing it at <a class="reference external" href="https://mybinder.org/">MyBinder</a> cloud:</p>
+<ul class="simple">
+<li><p>Launch JupyterLab with RobotKernel: <a class="reference external" href="https://mybinder.org/v2/gh/robots-from-jupyter/robotkernel/master?urlpath=lab/tree/starter/robotkernel-quickstart">https://mybinder.org/v2/gh/robots-from-jupyter/robotkernel/master?urlpath=lab/tree/starter/robotkernel-quickstart</a></p></li>
+<li><p>Launch Jupyter Notebook with RobotKernel: <a class="reference external" href="https://mybinder.org/v2/gh/robots-from-jupyter/robotkernel/master?urlpath=tree/example.ipynb">https://mybinder.org/v2/gh/robots-from-jupyter/robotkernel/master?urlpath=tree/example.ipynb</a></p></li>
+</ul>
+<p>Note: Log | Report -links on saved notebooks may not be clickable <a class="reference external" href="https://jupyter-notebook.readthedocs.io/en/latest/security.html#updating-trust">until notebook is “trusted”</a> (“Trust Notebook” in JupyterLab Commands) the related cells have been executed again.</p>
+</div>
+<div class="section" id="install-robotkernel">
+<h2>Install RobotKernel<a class="headerlink" href="#install-robotkernel" title="Permalink to this headline">¶</a></h2>
+<p>The easiest way to install RobotKernel is <a class="reference external" href="https://github.com/robots-from-jupyter/robotlab/releases">RobotLab</a>, the Robot Framework JupyterLab distribution, but <a class="reference internal" href="install.html"><span class="doc">it can also be installed manually</span></a>.</p>
+</div>
+<div class="section" id="learn-robotkernel">
+<h2>Learn RobotKernel<a class="headerlink" href="#learn-robotkernel" title="Permalink to this headline">¶</a></h2>
+<p>Learn how to use author Robot Framework test suites or resource files with a RobotKernel powered JupyterLab or Jupyter Notebook by following these introductory tutorials:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/01 Running Code.html">Running Code</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/01 Running Code.html#Code-cells-allow-you-to-enter-and-run-code">Code cells allow you to enter and run code</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/01 Running Code.html#Display-functions-allow-you-to-display-result">Display functions allow you to display result</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/01 Running Code.html#Output-is-asynchronous">Output is asynchronous</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/01 Running Code.html#Managing-the-Kernel">Managing the Kernel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/01 Running Code.html#Restarting-the-kernels">Restarting the kernels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/01 Running Code.html#Execution-will-stop-on-exception">Execution will stop on exception</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/02 Python XKCD.html">Example: The latest XKCD in Python</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/02 Python XKCD.html#Assigning-variables">Assigning variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/02 Python XKCD.html#Evaluating-variables">Evaluating variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/02 Python XKCD.html#Displaying-JSON">Displaying JSON</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/02 Python XKCD.html#Displaying-images">Displaying images</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/03 Running Robot.html">Running Robot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/04 Robot XKCD.html">Example: The latest XKCD in Robot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/05 Interactive Selenium.html">Autocompleting Selenium locators</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/05 Interactive Selenium.html#Configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/05 Interactive Selenium.html#Autocompleting-locators">Autocompleting locators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/05 Interactive Selenium.html#Interactive-picker-for-the-locator">Interactive picker for the locator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/05 Interactive Selenium.html#Closing-the-browser-window">Closing the browser window</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/06 Importing Notebooks.html">Importing notebooks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/06 Importing Notebooks.html#Example-importing-notebooks">Example importing notebooks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/06 Importing Notebooks.html#Closing-the-browser-window">Closing the browser window</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/07 Prototyping Keywords.html">Prototyping Keywords</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/07 Prototyping Keywords.html#Executable-keywords">Executable keywords</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/07 Prototyping Keywords.html#Re-executable-keyword-example">Re-executable keyword example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/07 Prototyping Keywords.html#Example-for-Windows">Example for Windows</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/08 Interactive WhiteLibrary.html">WhiteLibrary Support</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/08 Interactive WhiteLibrary.html#State-management">State management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/08 Interactive WhiteLibrary.html#Element-picker">Element picker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notebooks/08 Interactive WhiteLibrary.html#OpenCV-template-grabber-and-matcher">OpenCV template grabber and matcher</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/09 Prototyping Libraries.html">Prototyping Libraries</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="export-to-robot">
+<h2>Export to .robot<a class="headerlink" href="#export-to-robot" title="Permalink to this headline">¶</a></h2>
+<p>It is possible to export Robot Framework Jupyter notebooks to regular plain text <code class="docutils literal notranslate"><span class="pre">.robot</span></code> files for usage without Jupyter tools:</p>
+<p>From JupyterLab, export a notebook into  <code class="docutils literal notranslate"><span class="pre">.robot</span></code> file by choosing from the menu</p>
+<ol class="arabic simple">
+<li><p>File</p></li>
+<li><p>Export Notebook As…</p></li>
+<li><p>Export Notebook to Executable Script.</p></li>
+</ol>
+<p>From Jupyter Notebook, export a notebook into <code class="docutils literal notranslate"><span class="pre">.robot</span></code> file by choosing from the menu</p>
+<ol class="arabic simple">
+<li><p>File</p></li>
+<li><p>Download as</p></li>
+<li><p>Robot Framework (.robot).</p></li>
+</ol>
+<p>From command-line with <a class="reference external" href="https://nbconvert.readthedocs.io/">nbconvert</a>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ jupyter nbconvert --to script example.ipynb
+</pre></div>
+</div>
+<p>Robot Framework is also supported by <a class="reference external" href="https://jupytext.readthedocs.io/">Jupytext</a>, which support exporting <code class="docutils literal notranslate"><span class="pre">.robot</span></code> from a notebook and keep them synchronized with as long as JupyterLab or Jupyter Notebooks is running on the background. This allows editing the notebook alternatively with Jupyter tools or the IDE of choice.</p>
+<p>Note: Exporting notebooks with inline python modules defined using <code class="docutils literal notranslate"><span class="pre">%%python</span> <span class="pre">module</span></code> magics may result in broken <code class="docutils literal notranslate"><span class="pre">.robot</span></code> files requiring manual clean up of the exported inline python code.</p>
+</div>
+<div class="section" id="execute-notebooks">
+<h2>Execute notebooks<a class="headerlink" href="#execute-notebooks" title="Permalink to this headline">¶</a></h2>
+<p>RobotKernel installs a script named <code class="docutils literal notranslate"><span class="pre">nbrobot</span></code>. It can be used instead of Robot Framework’s <code class="docutils literal notranslate"><span class="pre">robot</span></code> test runner to execute Robot Framework with <code class="docutils literal notranslate"><span class="pre">.ipynb</span></code>-extension support:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ nbrobot example.ipynb
+</pre></div>
+</div>
+<p>In addition, it is also possible to execute notebooks with <a class="reference external" href="https://nbconvert.readthedocs.io/">nbconvert</a> to result a new notebook with embedded execution logs and reports:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ jupyter nbconvert --to notebook --execute example.ipynb
+</pre></div>
+</div>
+<p>On execution error, the partially executed notebook may not be saved until an extra argument <code class="docutils literal notranslate"><span class="pre">--ExecutePreprocessor.allow_errors=True</span></code> is given:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$ jupyter nbconvert --ExecutePreprocessor.allow_errors<span class="o">=</span>True --to notebook --execute example.ipynb
+</pre></div>
+</div>
+<p>This <a class="reference external" href="https://github.com/jupyter/nbconvert/issues/626">may change</a> in future versions of nbconvert.</p>
+<p>Note: When executing a notebook with nbconvert, each cell with tests cases or tasks will be executed as its own suite. This may cause differences in execution when compared to executing exported <code class="docutils literal notranslate"><span class="pre">.robot</span></code> files with <code class="docutils literal notranslate"><span class="pre">robot</span></code> or <code class="docutils literal notranslate"><span class="pre">nbrobot</span></code>.</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="notebooks/01 Running Code.html" class="btn btn-neutral float-right" title="Running Code" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 1970, Asko Soukka
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

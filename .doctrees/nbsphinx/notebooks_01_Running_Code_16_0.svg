@@ -1,0 +1,4 @@
+<svg height="30" width="122">
+  <rect height="30" rx="10" style="fill:green" width="122"/>
+  <text style="fill:white" x="10" y="20">Hello World!</text>
+</svg>
