@@ -16,6 +16,21 @@ let self = rec {
     pythonPackages = pkgs.python3Packages;
   }).pythonPackages;
 
+  robotframework_ls = pythonPackages.buildPythonPackage {
+    pname = "robotframework_ls";
+    version = "0.0.1";
+    src = builtins.fetchurl {
+      url = "https://github.com/robocorp/robotframework-lsp/archive/aa9f6b85a17baf461118cb65af9142eeb809522a.tar.gz";
+      sha256 = "149290qndrfvjdnx6phqlbkxnfixwpyh730b36k3b6yd246i00bb";
+    };
+    postPatch = ''
+      cd src
+      rm -r robotframework_ls/libs_py2/*
+    '';
+    preConfigure = ''
+    '';
+  };
+
   sikulilibrary = (import ./pkgs/sikulixlibrary {
     inherit pkgs pythonPackages;
     jdk = pkgs.jdk;
@@ -48,12 +63,13 @@ let self = rec {
       iplantuml
       ipywidgets
       jupytext
+      jupyter-lsp
       jupyter-starters
       jupyter-contrib-nbextensions
       jupyter-nbextensions-configurator
       jupyterlab
       nbimporter
-      opencv3
+#     opencv3
       RESTinstance
       matplotlib
       rise
@@ -65,6 +81,7 @@ let self = rec {
       robotframework-seleniumscreenshots
       robotframework-jupyterlibrary
       robotkernel
+      robotframework_ls
       tkinter
       widgetsnbextension
     ] ++ pkgs.stdenv.lib.optionals sikuli [ sikulilibrary ];
@@ -122,6 +139,11 @@ let self = rec {
       JUPYTER_CONFIG_DIR=$out/share/jupyter \
       PATH=${pythonPackages.python.withPackages (ps: with ps; [ notebook jupytext ])}/bin \
       ${pythonPackages.python.withPackages (ps: with ps; [ notebook jupytext ])}/bin/jupyter serverextension enable jupytext
+
+      JUPYTER_CONFIG_DIR=$out/share/jupyter \
+      PATH=${pythonPackages.python.withPackages (ps: with ps; [ pythonPackages.notebook jupyter-lsp ])}/bin \
+      ${pythonPackages.python.withPackages (ps: with ps; [ pythonPackages.notebook jupyter-lsp ])}/bin/jupyter serverextension enable jupyter_lsp
+
 
       echo "import rise" >> $out/share/jupyter/jupyter_notebook_config.py
 

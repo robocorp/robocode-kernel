@@ -858,6 +858,23 @@ self: super: {
       self."traitlets"
     ];
   };
+  "jupyter-lsp" = super.buildPythonPackage rec {
+    pname = "jupyter-lsp";
+    version = "0.7.0b0";
+    src = fetchurl {
+      url = "https://files.pythonhosted.org/packages/39/52/3e267f7ff137ff8122917534408e99216737aee727661755f6d194453dc0/jupyter-lsp-0.7.0b0.tar.gz";
+      sha256 = "0hbhz504qrpz5l1yyvrwzdc8qsdhxxw4854pl7ybk4h9ahpmr8hz";
+    };
+    format = "setuptools";
+    doCheck = false;
+    buildInputs = [];
+    checkInputs = [];
+    nativeBuildInputs = [];
+    propagatedBuildInputs = [
+      self."notebook"
+      self."setuptools"
+    ];
+  };
   "jupyter-nbextensions-configurator" = super.buildPythonPackage rec {
     pname = "jupyter-nbextensions-configurator";
     version = "0.4.1";
@@ -1514,6 +1531,20 @@ self: super: {
       sha256 = "1v6wwyi13kb51rs131a9awxn1jhkjralm2vgzm2qvh2hab5xqhn3";
     };
     format = "wheel";
+    doCheck = false;
+    buildInputs = [];
+    checkInputs = [];
+    nativeBuildInputs = [];
+    propagatedBuildInputs = [];
+  };
+  "pyrepl" = super.buildPythonPackage rec {
+    pname = "pyrepl";
+    version = "0.9.0";
+    src = fetchurl {
+      url = "https://files.pythonhosted.org/packages/05/1b/ea40363be0056080454cdbabe880773c3c5bd66d7b13f0c8b8b8c8da1e0c/pyrepl-0.9.0.tar.gz";
+      sha256 = "0xd7h7k5cg9gd8nkqdykzkxmfasg8wwxcrmrpdqyh0jm9grp0999";
+    };
+    format = "setuptools";
     doCheck = false;
     buildInputs = [];
     checkInputs = [];
