@@ -1,0 +1,6 @@
+wheel==0.33.6
+pytest==4.6.7
+pytest-cov==2.8.1
+pytest-pep8==1.0.6
+pytest-pylint==0.14.1
+twine==3.1.1
