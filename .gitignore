@@ -9,7 +9,9 @@ syntax: glob
 .jupyterlab
 .jupyter-config
 .pytest_cache
+.coverage
 /build/
+/dist/
 /examples/button.png
 /geckodriver.log
 /html/
