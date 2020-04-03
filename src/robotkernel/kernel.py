@@ -14,6 +14,7 @@ from robotkernel.listeners import AppiumConnectionsListener
 from robotkernel.listeners import JupyterConnectionsListener
 from robotkernel.listeners import RobotKeywordsIndexerListener
 from robotkernel.listeners import RobotVariablesListener
+from robotkernel.listeners import RpaBrowserConnectionsListener
 from robotkernel.listeners import SeleniumConnectionsListener
 from robotkernel.listeners import WhiteLibraryListener
 from robotkernel.monkeypatches import inject_libdoc_ipynb_support
@@ -243,6 +244,7 @@ class RobotKernel(DisplayKernel):
 
             # Configure listeners
             listeners = [
+                RpaBrowserConnectionsListener(self.robot_connections),
                 SeleniumConnectionsListener(self.robot_connections),
                 JupyterConnectionsListener(self.robot_connections),
                 AppiumConnectionsListener(self.robot_connections),
