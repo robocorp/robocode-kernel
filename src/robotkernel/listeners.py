@@ -250,6 +250,30 @@ class SeleniumConnectionsListener:
             pass
 
 
+class RpaBrowserConnectionsListener:
+    ROBOT_LISTENER_API_VERSION = 2
+
+    def __init__(self, drivers: list):
+        self.drivers = drivers
+
+    # noinspection PyUnusedLocal,PyProtectedMember
+    def end_suite(self, name, attributes):
+        try:
+            instance = BuiltIn().get_library_instance("RPA.Browser")
+            clear_drivers(self.drivers, "RPA.Browser")
+            self.drivers.extend(get_webdrivers(instance._drivers, "RPA.Browser"))
+        except RuntimeError:
+            pass
+
+    # noinspection PyUnusedLocal,PyProtectedMember
+    def start_suite(self, name, attributes):
+        try:
+            instance = BuiltIn().get_library_instance("RPA.Browser")
+            set_webdrivers(self.drivers, instance._drivers, "RPA.Browser")
+        except RuntimeError:
+            pass
+
+
 class JupyterConnectionsListener:
     ROBOT_LISTENER_API_VERSION = 2
 
