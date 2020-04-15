@@ -124,7 +124,7 @@ class RobotKernel(DisplayKernel):
         elif is_selector(needle):
             matches = []
             for driver in yield_current_connection(
-                self.robot_connections, ["selenium", "jupyter", "appium"]
+                self.robot_connections, ["RPA.Browser", "selenium", "jupyter", "appium"]
             ):
                 matches = get_selector_completions(needle.rstrip(), driver)
         elif is_autoit_selector(needle):
@@ -143,7 +143,7 @@ class RobotKernel(DisplayKernel):
         else:
             # Clear selector completion highlights
             for driver in yield_current_connection(
-                self.robot_connections, ["selenium", "jupyter"]
+                self.robot_connections, ["RPA.Browser", "selenium", "jupyter"]
             ):
                 try:
                     clear_selector_highlights(driver)
@@ -216,7 +216,7 @@ class RobotKernel(DisplayKernel):
 
         # Clear selector completion highlights
         for driver in yield_current_connection(
-            self.robot_connections, ["selenium", "jupyter"]
+            self.robot_connections, ["RPA.Browser", "selenium", "jupyter"]
         ):
             try:
                 clear_selector_highlights(driver)
