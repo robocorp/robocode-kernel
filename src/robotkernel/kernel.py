@@ -23,9 +23,11 @@ from robotkernel.selectors import clear_selector_highlights
 from robotkernel.selectors import get_autoit_selector_completions
 from robotkernel.selectors import get_selector_completions
 from robotkernel.selectors import get_white_selector_completions
+from robotkernel.selectors import get_win32_selector_completions
 from robotkernel.selectors import is_autoit_selector
 from robotkernel.selectors import is_selector
 from robotkernel.selectors import is_white_selector
+from robotkernel.selectors import is_win32_selector
 from robotkernel.utils import close_current_connection
 from robotkernel.utils import detect_robot_context
 from robotkernel.utils import get_keyword_doc
@@ -131,6 +133,8 @@ class RobotKernel(DisplayKernel):
             matches = get_autoit_selector_completions(needle)
         elif is_white_selector(needle):
             matches = get_white_selector_completions(needle)
+        elif is_win32_selector(needle):
+            matches = get_win32_selector_completions(needle)
         elif context == "__settings__" and any(
             [
                 line.lower().startswith("library "),

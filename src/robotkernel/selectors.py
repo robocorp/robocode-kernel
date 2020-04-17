@@ -5,13 +5,19 @@ import pkg_resources
 import re
 import time
 
-
 try:
     import WhiteLibrary
     from robotkernel.selectors_white import PickSnipTool
 except ImportError:
     WhiteLibrary = None
     PickSnipTool = None
+
+try:
+    import pywinauto
+    from robotkernel.selectors_pywin32 import ImageRegionTool, PointPickTool
+except ImportError:
+    ImageRegionTool = None
+    PointPickTool = None
 
 try:
     import pywintypes
@@ -49,6 +55,7 @@ IS_SELENIUM_SELECTOR_NEEDLE = re.compile(
 IS_APPIUM_SELECTOR_NEEDLE = re.compile(r"^id=|^id:|^xpath=|^xpath:")
 IS_AUTOIT_SELECTOR_NEEDLE = re.compile(r"^strTitle=|^strControl=")
 IS_WHITE_SELECTOR_NEEDLE = re.compile(r"^ae=|^ae:|^template=|^template:")
+IS_WIN32_SELECTOR_NEEDLE = re.compile(r"^uia=|^uia:|^template=|^template:")
 IS_ID_SELECTOR_NEEDLE = re.compile(r"^id=|^id:")
 IS_NAME_SELECTOR_NEEDLE = re.compile(r"^name=|^name:")
 IS_CSS_SELECTOR_NEEDLE = re.compile(r"^css=|^css:")
@@ -124,6 +131,13 @@ def is_white_selector(needle):
         return False
     else:
         return bool(IS_WHITE_SELECTOR_NEEDLE.match(needle))
+
+
+def is_win32_selector(needle):
+    if PointPickTool is None or ImageRegionTool is None:
+        return False
+    else:
+        return bool(IS_WIN32_SELECTOR_NEEDLE.match(needle))
 
 
 def is_selector(needle):
@@ -258,6 +272,41 @@ def get_white_selector_completions(needle, driver=PickSnipTool):
     if driver:
         results = _get_white_selector_completions(needle, driver)
         return [r for r in results if r]
+    else:
+        return []
+
+
+def get_win32_selector_completions(needle):
+    if needle.startswith("template"):
+        filename = f"{int(time.time())}.bmp"
+        region = ImageRegionTool(filename=os.path.join(os.getcwd(), filename)).run()
+        if region is None:
+            return []
+
+        return [f"template=${{EXECDIR}}{os.path.sep * 2}{filename}"]
+
+    elif needle.startswith("uia"):
+        point = PointPickTool().run()
+        if point is None:
+            return []
+
+        element = pywinauto.Desktop(backend="uia").from_point(*point)
+        results = []
+        for attribute in (
+            "name",
+            "rich_text",
+            "automation_id",
+            "control_type",
+            "class_name",
+        ):
+            value = getattr(element, attribute, None)
+            if callable(value):
+                value = value()
+            if value:
+                results.append(f"{attribute}:{value}")
+
+        return results
+
     else:
         return []
 
