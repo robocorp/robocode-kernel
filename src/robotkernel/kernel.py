@@ -69,6 +69,7 @@ class RobotKernel(DisplayKernel):
 
     def __init__(self, **kwargs):
         super(RobotKernel, self).__init__(**kwargs)
+
         # Enable nbreader
         inject_robot_ipynb_support()
         inject_libdoc_ipynb_support()
@@ -114,7 +115,10 @@ class RobotKernel(DisplayKernel):
         line_cursor = cursor_pos - offset
         needle = re.split(r"\s{2,}|\t| \| ", line[:line_cursor])[-1].lstrip()
 
+        self.log.debug("Completing text: %s", needle)
+
         if needle and needle[0] in "$@&%":  # is variable completion
+            self.log.debug("Context: Variable")
             matches = [
                 m["ref"]
                 for m in scored_results(
@@ -129,18 +133,28 @@ class RobotKernel(DisplayKernel):
             if len(line) > line_cursor and line[line_cursor] == "}":
                 cursor_pos += 1
                 needle += "}"
+
         elif is_selector(needle):
+            self.log.debug("Context: Selenium or Appium selector")
+            self.log.debug("Current WebDrivers: %s", self.robot_connections)
             matches = []
             for driver in yield_current_connection(
                 self.robot_connections, ["RPA.Browser", "selenium", "jupyter", "appium"]
             ):
                 matches = get_selector_completions(needle.rstrip(), driver)
+
         elif is_autoit_selector(needle):
+            self.log.debug("Context: AutoIt selector")
             matches = get_autoit_selector_completions(needle)
+
         elif is_white_selector(needle):
+            self.log.debug("Context: WhiteLibrary selector")
             matches = get_white_selector_completions(needle)
+
         elif is_win32_selector(needle):
+            self.log.debug("Context: Win32 selector")
             matches = get_win32_selector_completions(needle)
+
         elif context == "__settings__" and any(
             [
                 line.lower().startswith("library "),
@@ -149,8 +163,11 @@ class RobotKernel(DisplayKernel):
                 "get library instance" in line.lower(),
             ]
         ):
+            self.log.debug("Context: Library name")
             matches = complete_libraries(needle.lower())
+
         else:
+            self.log.debug("Context: Keywords or Built-ins")
             # Clear selector completion highlights
             for driver in yield_current_connection(
                 self.robot_connections, ["RPA.Browser", "selenium", "jupyter"]
@@ -165,6 +182,8 @@ class RobotKernel(DisplayKernel):
                 self.robot_catalog["keywords"],
                 context,
             )
+
+        self.log.debug("Available completions: %s", matches)
 
         return {
             "matches": matches,
