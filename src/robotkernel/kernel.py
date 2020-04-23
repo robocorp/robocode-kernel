@@ -1,6 +1,14 @@
 # -*- coding: utf-8 -*-
+import os
+import re
+import robot
+import sys
+import uuid
 from collections import OrderedDict
+
 from IPython.utils.tokenutil import line_at_cursor
+from ipykernel.kernelapp import IPKernelApp
+
 from robotkernel import __version__
 from robotkernel.completion_finders import complete_libraries
 from robotkernel.constants import CONTEXT_LIBRARIES
@@ -36,11 +44,9 @@ from robotkernel.utils import lunr_builder
 from robotkernel.utils import lunr_query
 from robotkernel.utils import scored_results
 from robotkernel.utils import yield_current_connection
-import re
-import robot
-import sys
-import uuid
 
+
+PID = os.getpid()
 
 if HAS_NBIMPORTER:
     import nbimporter  # noqa
@@ -267,7 +273,19 @@ class RobotKernel(DisplayKernel):
             return result
 
 
-if __name__ == "__main__":
-    from ipykernel.kernelapp import IPKernelApp
+class RobotKernelApp(IPKernelApp):
+    name = "robot-kernel"
+    kernel_class = RobotKernel
 
-    IPKernelApp.launch_instance(kernel_class=RobotKernel)
+    log_datefmt = "%H:%M:%S"
+    log_format = (
+        "%(asctime)s.%(msecs)03d"
+        " | %(levelname)s"
+        " | %(name)s"
+        f" | {PID}"
+        " | %(message)s"
+    )
+
+
+if __name__ == "__main__":
+    RobotKernelApp.launch_instance()
