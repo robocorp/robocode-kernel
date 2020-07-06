@@ -30,25 +30,40 @@ else:
     from robot.parsing.settings import Documentation
 
 
-def javascript_uri(html, filename=""):
-    """Because data-uri for text/html is not supported by IE."""
+SCRIPT_DISPLAY_LOG = """\
+var content = '{content}';
+
+var w = window.open('', '', 'width=900,height=900');
+w.document.body.style = 'margin:0; overflow: hidden;';
+
+var i = w.document.createElement('iframe');
+i.src = 'data:text/html;base64,' + content;
+i.style = (
+  'position:absolute;' +
+  'left: 0px; width: 100%;' +
+  'top: 0px; height: 100%;' +
+  'border-width: 0;'
+);
+w.document.body.append(i);
+
+var a = w.document.createElement('a');
+a.appendChild(w.document.createTextNode('Download'));
+a.href = 'data:text/html;base64,' + content;
+a.download = '{filename}';
+a.style = (
+  'position:fixed;top:0;right:0;' +
+  'color:white;background:black;text-decoration:none;' +
+  'font-weight:bold;padding:7px 14px;border-radius:0 0 0 5px;'
+);
+w.document.body.append(a);
+"""
+
+
+def display_log(html, filename=""):
     if isinstance(html, str):
         html = html.encode("utf-8")
-    return (
-        "javascript:(function(el){{"
-        "var w=window.open();var d='{}';"
-        "w.document.open();"
-        "w.document.write(window.atob(d));"
-        "w.document.close();"
-        "var a=w.document.createElement('a');"
-        "a.appendChild(w.document.createTextNode('Download'));"
-        "a.href='data:text/html;base64,' + d;"
-        "a.download='{}';"
-        "a.style='position:fixed;top:0;right:0;"
-        "color:white;background:black;text-decoration:none;"
-        "font-weight:bold;padding:7px 14px;border-radius:0 0 0 5px;';"
-        "w.document.body.append(a);"
-        "}})(this);".format(base64.b64encode(html).decode("utf-8"), filename)
+    return SCRIPT_DISPLAY_LOG.format(
+        content=base64.b64encode(html).decode("utf-8"), filename=filename
     )
 
 

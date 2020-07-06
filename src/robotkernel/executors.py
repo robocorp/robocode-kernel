@@ -15,7 +15,7 @@ from robotkernel.listeners import RobotKeywordsIndexerListener
 from robotkernel.listeners import RobotVariablesListener
 from robotkernel.listeners import StatusEventListener
 from robotkernel.utils import data_uri
-from robotkernel.utils import javascript_uri
+from robotkernel.utils import display_log
 from robotkernel.utils import to_mime_and_metadata
 from tempfile import TemporaryDirectory
 from traceback import format_exc
@@ -299,7 +299,7 @@ def run_robot_suite(
     writer = ResultWriter(os.path.join(path, "output.xml"))
     writer.write_results(
         log=os.path.join(path, "log.html"),
-        report=os.path.join(path, "report.html"),
+        report=None,
         rpa=getattr(suite, "rpa", False),
     )
 
@@ -307,17 +307,13 @@ def run_robot_suite(
         log = fp.read()
         log = log.replace(b'"reportURL":"report.html"', b'"reportURL":null')
 
-    with open(os.path.join(path, "report.html"), "rb") as fp:
-        report = fp.read()
-        report = report.replace(b'"logURL":"log.html"', b'"logURL":null')
-
     # Clear status and display results
     if not silent:
         (widget and kernel.send_display_data or kernel.send_update_display_data)(
             {
                 "text/html": ""
-                '<p><a href="_blank" onClick="{}">Log</a></p>'.format(
-                    javascript_uri(log, "log.html"),
+                '<p><a href="#" onClick="{};event.preventDefault();event.stopPropagation();">Log</a></p>'.format(
+                    display_log(log, "log.html"),
                 )
             },
             display_id=display_id,
