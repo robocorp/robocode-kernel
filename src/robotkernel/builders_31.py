@@ -33,7 +33,7 @@ def build_suite(code: str, cell_history: Dict[str, str]):
     # Wrap up
     builder = TestSuiteBuilder()
     suite = builder._build_suite(data)
-    suite._name = "Jupyter"
+    suite._name = "Robocode Lab"
 
     return suite
 
