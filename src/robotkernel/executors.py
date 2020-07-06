@@ -227,14 +227,9 @@ def execute_robot(
             # Purging of TemporaryDirectory may fail e.g. with geckodriver.log still open
             pass
     else:
-        last_code = getattr(kernel, "_last_code", "")
-        if code == last_code:
-            setattr(kernel, "_last_code", "")
-        else:
-            inject_ipywidgets(
-                kernel, code, history, listeners, silent, display_id, suite.rpa
-            )
-            setattr(kernel, "_last_code", code)
+        inject_ipywidgets(
+            kernel, code, history, listeners, silent, display_id, suite.rpa
+        )
         reply = {"status": "ok", "execution_count": kernel.execution_count}
 
     return reply
