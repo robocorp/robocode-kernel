@@ -296,13 +296,13 @@ class RobotKernelApp(IPKernelApp):
     name = "robot-kernel"
     kernel_class = RobotKernel
 
-    log_datefmt = "%H:%M:%S"
+    log_datefmt = "%Y/%m/%d %H:%M:%S"
     log_format = (
         "%(asctime)s.%(msecs)03d"
-        " | %(levelname)s"
-        " | %(name)s"
-        f" | {PID}"
-        " | %(message)s"
+        " › %(levelname)s"
+        " › %(name)s"
+        f" › {PID}"
+        " › %(message)s"
     )
 
 
