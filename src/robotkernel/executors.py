@@ -8,6 +8,7 @@ from PIL import Image
 from robot.reporting import ResultWriter
 from robot.running.model import TestSuite
 from robotkernel.builders import build_suite
+from robotkernel.constants import ICON_FILE_TEXT
 from robotkernel.display import DisplayKernel
 from robotkernel.display import ProgressUpdater
 from robotkernel.listeners import ReturnValueListener
@@ -304,15 +305,25 @@ def run_robot_suite(
 
     # Clear status and display results
     if not silent:
-        (widget and kernel.send_display_data or kernel.send_update_display_data)(
-            {
-                "text/html": ""
-                '<p><a href="#" onClick="{};event.preventDefault();event.stopPropagation();">Log</a></p>'.format(
-                    display_log(log, "log.html"),
-                )
-            },
-            display_id=display_id,
+        log_button = """
+        <button
+          class="jp-mod-styled jp-mod-accept"
+          onClick="{};event.preventDefault();event.stopPropagation();"
+        >
+          <div style="display:inline-flex;align-self:center;">
+            <div style="top:.125em;position:relative;margin-right:5px;">{}</div> Log
+          </div>
+        </button>
+        """.format(
+            display_log(log, "log.html"),
+            ICON_FILE_TEXT
         )
+        if widget:
+            kernel.send_display_data({"text/html": log_button}, display_id=display_id)
+        else:
+            kernel.send_update_display_data(
+                {"text/html": log_button}, display_id=display_id
+            )
 
     # Reply ok on pass
     if stats.total.critical.failed:
