@@ -1,36 +1,27 @@
 # -*- coding: utf-8 -*-
 from collections import OrderedDict
-from io import BytesIO
-from io import StringIO
-from IPython.core.display import clear_output
-from IPython.core.display import display
-from PIL import Image
-from robot.reporting import ResultWriter
-from robot.running.model import TestSuite
-from robotkernel.builders import build_suite
-from robotkernel.constants import ICON_FILE_TEXT
-from robotkernel.display import DisplayKernel
-from robotkernel.display import ProgressUpdater
-from robotkernel.listeners import ReturnValueListener
-from robotkernel.listeners import RobotKeywordsIndexerListener
-from robotkernel.listeners import RobotVariablesListener
-from robotkernel.listeners import StatusEventListener
-from robotkernel.utils import data_uri
-from robotkernel.utils import display_log
-from robotkernel.utils import to_mime_and_metadata
-from tempfile import TemporaryDirectory
-from traceback import format_exc
-from typing import List
-from typing import Tuple
-from urllib.parse import unquote
+from io import BytesIO, StringIO
 import base64
 import binascii
-import ipywidgets
 import os
 import re
 import sys
 import types
 import uuid
+from tempfile import TemporaryDirectory
+from traceback import format_exc
+from typing import List, Tuple
+from urllib.parse import unquote
+import ipywidgets
+from IPython.core.display import clear_output, display
+from PIL import Image
+from robot.reporting import ResultWriter
+from robot.running.model import TestSuite
+from robotkernel.builders import build_suite
+from robotkernel.constants import ICON_FILE_TEXT
+from robotkernel.display import DisplayKernel, ProgressUpdater
+from robotkernel.listeners import ReturnValueListener, RobotKeywordsIndexerListener, RobotVariablesListener, StatusEventListener
+from robotkernel.utils import data_uri, display_log, to_mime_and_metadata
 
 
 def execute_python(kernel: DisplayKernel, code: str, module: str, silent: bool):

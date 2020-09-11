@@ -11,39 +11,25 @@ from ipykernel.kernelapp import IPKernelApp
 
 from robotkernel import __version__
 from robotkernel.completion_finders import complete_libraries
-from robotkernel.constants import CONTEXT_LIBRARIES
-from robotkernel.constants import HAS_NBIMPORTER
-from robotkernel.constants import VARIABLE_REGEXP
+from robotkernel.constants import CONTEXT_LIBRARIES, HAS_NBIMPORTER, VARIABLE_REGEXP
 from robotkernel.display import DisplayKernel
 from robotkernel.exceptions import BrokenOpenConnection
-from robotkernel.executors import execute_python
-from robotkernel.executors import execute_robot
-from robotkernel.listeners import AppiumConnectionsListener
-from robotkernel.listeners import JupyterConnectionsListener
-from robotkernel.listeners import RobotKeywordsIndexerListener
-from robotkernel.listeners import RobotVariablesListener
-from robotkernel.listeners import RpaBrowserConnectionsListener
-from robotkernel.listeners import SeleniumConnectionsListener
-from robotkernel.listeners import WhiteLibraryListener
-from robotkernel.monkeypatches import inject_libdoc_ipynb_support
-from robotkernel.monkeypatches import inject_robot_ipynb_support
-from robotkernel.selectors import clear_selector_highlights
-from robotkernel.selectors import get_autoit_selector_completions
-from robotkernel.selectors import get_selector_completions
-from robotkernel.selectors import get_white_selector_completions
-from robotkernel.selectors import get_win32_selector_completions
-from robotkernel.selectors import is_autoit_selector
-from robotkernel.selectors import is_selector
-from robotkernel.selectors import is_white_selector
-from robotkernel.selectors import is_win32_selector
-from robotkernel.utils import close_current_connection
-from robotkernel.utils import detect_robot_context
-from robotkernel.utils import get_keyword_doc
-from robotkernel.utils import get_lunr_completions
-from robotkernel.utils import lunr_builder
-from robotkernel.utils import lunr_query
-from robotkernel.utils import scored_results
-from robotkernel.utils import yield_current_connection
+from robotkernel.executors import execute_python, execute_robot
+from robotkernel.listeners import (
+    AppiumConnectionsListener, JupyterConnectionsListener, RobotKeywordsIndexerListener,
+    RobotVariablesListener, RpaBrowserConnectionsListener, SeleniumConnectionsListener,
+    WhiteLibraryListener
+)
+from robotkernel.monkeypatches import inject_libdoc_ipynb_support, inject_robot_ipynb_support
+from robotkernel.selectors import (
+    clear_selector_highlights, get_autoit_selector_completions, get_selector_completions,
+    get_white_selector_completions, get_win32_selector_completions, is_autoit_selector,
+    is_selector, is_white_selector, is_win32_selector
+)
+from robotkernel.utils import (
+    close_current_connection, detect_robot_context, get_keyword_doc, get_lunr_completions,
+    lunr_builder, lunr_query, scored_results, yield_current_connection
+)
 
 
 PID = os.getpid()
