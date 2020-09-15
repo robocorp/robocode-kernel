@@ -8,6 +8,7 @@ import re
 import sys
 import types
 import uuid
+from copy import deepcopy
 from tempfile import TemporaryDirectory
 from traceback import format_exc
 from typing import List, Tuple
@@ -17,7 +18,7 @@ from IPython.core.display import clear_output, display
 from PIL import Image
 from robot.reporting import ResultWriter
 from robot.running.model import TestSuite
-from robotkernel.builders import build_suite
+from robotkernel.builders import clean_items, populate_suite
 from robotkernel.constants import ICON_FILE_TEXT
 from robotkernel.display import DisplayKernel, ProgressUpdater
 from robotkernel.listeners import ReturnValueListener, RobotKeywordsIndexerListener, RobotVariablesListener, StatusEventListener
@@ -51,14 +52,20 @@ def execute_python(kernel: DisplayKernel, code: str, module: str, silent: bool):
 
 
 def normalize_argument(name):
-    return re.sub(r"\W", "_", re.sub(r"^[^\w]*|[^\w]*$", "", name, re.U), re.U)
+    if "=" in name:
+        name, default = name.split("=", 1)
+    else:
+        default = None
+
+    return (
+        name,
+        re.sub(r"\W", "_", re.sub(r"^[^\w]*|[^\w]*$", "", name, re.U), re.U),
+        default
+    )
 
 
 def execute_ipywidget(
     kernel: DisplayKernel,
-    code: str,
-    history: OrderedDict,
-    listeners: list,
     silent: bool,
     display_id: str,
     rpa: bool,
@@ -67,19 +74,23 @@ def execute_ipywidget(
     values,
 ):
     header = rpa and "Tasks" or "Test Cases"
-    code += f"""\
+    code = f"""\
 
 *** {header} ***
 
 {name}
     {name}  {'  '.join([values[a[1]] for a in arguments])}
 """
-    suite = build_suite(code, history)
+
+    # Copy the test suite
+    suite = deepcopy(kernel.suite)
+    populate_suite(code, suite, kernel.defaults)
     suite.rpa = True
+
     try:
         with TemporaryDirectory() as path:
             run_robot_suite(
-                kernel, suite, listeners, silent, display_id, path, widget=True
+                kernel, suite, silent, display_id, path, widget=True
             )
     except PermissionError:
         # Purging of TemporaryDirectory may fail e.g. with geckodriver.log still open
@@ -88,9 +99,7 @@ def execute_ipywidget(
 
 def inject_ipywidget(
     kernel: DisplayKernel,
-    code: str,
-    history: OrderedDict,
-    listeners: list,
+    suite: TestSuite,
     silent: bool,
     display_id: str,
     rpa: bool,
@@ -100,9 +109,6 @@ def inject_ipywidget(
     def execute(**values):
         execute_ipywidget(
             kernel,
-            code,
-            history,
-            listeners,
             silent,
             display_id,
             rpa,
@@ -151,55 +157,28 @@ def inject_ipywidget(
 
 def inject_ipywidgets(
     kernel: DisplayKernel,
-    code: str,
-    history: OrderedDict,
-    listeners: list,
+    suite: TestSuite,
     silent: bool,
     display_id: str,
     rpa: bool,
 ):
-    suite_ = build_suite(code, {})
-    for keyword in suite_.resource.keywords:
+    for keyword in kernel.new_keywords:
         name = keyword.name
-        arguments = []
-        for arg in keyword.args:
-            if "=" in arg:
-                arg, default = arg.split("=", 1)
-            else:
-                default = None
-            arguments.append((arg, normalize_argument(arg), default))
+        arguments = [normalize_argument(arg) for arg in keyword.args]
+
         inject_ipywidget(
-            kernel, code, history, listeners, silent, display_id, rpa, name, arguments
+            kernel, suite, silent, display_id, rpa, name, arguments
         )
 
 
 def execute_robot(
     kernel: DisplayKernel,
-    code: str,
-    history: OrderedDict,
-    listeners: list,
+    suite: TestSuite,
     silent: bool,
 ):
     display_id = str(uuid.uuid4())
-    try:
-        suite = build_suite(code, history)
-    except Exception as e:
-        if not silent:
-            kernel.send_error(
-                {
-                    "ename": e.__class__.__name__,
-                    "evalue": str(e),
-                    "traceback": list(format_exc().splitlines()),
-                }
-            )
-        return {
-            "status": "error",
-            "ename": e.__class__.__name__,
-            "evalue": str(e),
-            "traceback": list(format_exc().splitlines()),
-        }
 
-    for listener in listeners:
+    for listener in kernel.listeners:
         # Update keywords catalog
         if isinstance(listener, RobotKeywordsIndexerListener):
             # noinspection PyProtectedMember
@@ -213,14 +192,14 @@ def execute_robot(
         try:
             with TemporaryDirectory() as path:
                 reply = run_robot_suite(
-                    kernel, suite, listeners, silent, display_id, path
+                    kernel, suite, silent, display_id, path
                 )
         except PermissionError:
             # Purging of TemporaryDirectory may fail e.g. with geckodriver.log still open
             pass
     else:
         inject_ipywidgets(
-            kernel, code, history, listeners, silent, display_id, suite.rpa
+            kernel, suite, silent, display_id, suite.rpa
         )
         reply = {"status": "ok", "execution_count": kernel.execution_count}
 
@@ -230,7 +209,6 @@ def execute_robot(
 def run_robot_suite(
     kernel: DisplayKernel,
     suite: TestSuite,
-    listeners: list,
     silent: bool,
     display_id: str,
     path: str,
@@ -243,7 +221,7 @@ def run_robot_suite(
         progress = None
 
     # Init status
-    listeners = listeners[:]
+    listeners = kernel.listeners[:]
     if not (silent or widget):
         listeners.append(StatusEventListener(lambda data: progress.update(data)))
     if not silent:

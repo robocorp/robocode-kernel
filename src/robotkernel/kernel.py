@@ -9,11 +9,14 @@ from collections import OrderedDict
 from IPython.utils.tokenutil import line_at_cursor
 from ipykernel.kernelapp import IPKernelApp
 
+from robot.running.model import TestSuite
+from robot.running.builder.testsettings import TestDefaults
 from robotkernel import __version__
 from robotkernel.completion_finders import complete_libraries
 from robotkernel.constants import CONTEXT_LIBRARIES, HAS_NBIMPORTER, VARIABLE_REGEXP
 from robotkernel.display import DisplayKernel
 from robotkernel.exceptions import BrokenOpenConnection
+from robotkernel.builders import clean_items, populate_suite
 from robotkernel.executors import execute_python, execute_robot
 from robotkernel.listeners import (
     AppiumConnectionsListener, JupyterConnectionsListener, RobotKeywordsIndexerListener,
@@ -70,6 +73,10 @@ class RobotKernel(DisplayKernel):
         # Sticky connection cache (e.g. for webdrivers)
         self.robot_connections = []
 
+        # Cache keywords
+        self.new_keywords = []
+        self.keywords = []
+
         # Searchable index for keyword autocomplete documentation
         builder = lunr_builder("dottedname", ["dottedname", "name"])
         self.robot_catalog = {
@@ -83,6 +90,10 @@ class RobotKernel(DisplayKernel):
         for name, keywords in CONTEXT_LIBRARIES.items():
             # noinspection PyProtectedMember
             populator._library_import(keywords, name)
+
+        # Create test suite
+        self.suite = TestSuite(name="Robocode Lab", source=os.getcwd())
+        self.defaults = TestDefaults(None)
 
     def do_shutdown(self, restart):
         super(RobotKernel, self).do_shutdown(restart)
@@ -258,7 +269,7 @@ class RobotKernel(DisplayKernel):
             self.robot_variables.extend(VARIABLE_REGEXP.findall(code, re.U & re.M))
 
             # Configure listeners
-            listeners = [
+            self.listeners = [
                 RpaBrowserConnectionsListener(self.robot_connections),
                 SeleniumConnectionsListener(self.robot_connections),
                 JupyterConnectionsListener(self.robot_connections),
@@ -268,12 +279,38 @@ class RobotKernel(DisplayKernel):
                 RobotVariablesListener(self.robot_suite_variables),
             ]
 
+            # Build suite
+            try:
+                populate_suite(code, self.suite, self.defaults)
+            except Exception as e:
+                if not silent:
+                    self.send_error(
+                        {
+                            "ename": e.__class__.__name__,
+                            "evalue": str(e),
+                            "traceback": list(format_exc().splitlines()),
+                        }
+                    )
+                return {
+                    "status": "error",
+                    "ename": e.__class__.__name__,
+                    "evalue": str(e),
+                    "traceback": list(format_exc().splitlines()),
+                }
+
+            # Keep new keywords in memory, they are used for constructing the widgets
+            self.new_keywords = [item for item in self.suite.resource.keywords._items if item not in self.keywords]
+            self.keywords = list(self.suite.resource.keywords._items)
+
             # Execute test case
-            result = execute_robot(self, code, self.robot_history, listeners, silent,)
+            result = execute_robot(self, self.suite, silent)
 
             # Save history
             if result["status"] == "ok":
                 self.robot_history[self.robot_cell_id or str(uuid.uuid4())] = code
+
+            # Clean the tests that were run
+            clean_items(self.suite.tests)
 
             return result
 
