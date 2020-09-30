@@ -93,13 +93,13 @@ def lunr_builder(ref, fields):
 
 
 def readable_keyword(s):
-    """Return keyword with only the first letter in title case."""
+    """Return keyword in title case."""
     if s and not s.startswith("*") and not s.startswith("["):
         if s.count("."):
             library, name = s.rsplit(".", 1)
-            return library + "." + name[0].title() + name[1:].lower()
+            return library + "." + name[0:].title()
         else:
-            return s[0].title() + s[1:].lower()
+            return s[0:].title()
     else:
         return s
 

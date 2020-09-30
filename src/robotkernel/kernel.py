@@ -60,7 +60,7 @@ class RobotKernel(DisplayKernel):
     language_version = robot.__version__
     language_info = {
         "mimetype": "text/x-robotframework",
-        "name": "Robot Framework",
+        "name": "robotframework",
         "file_extension": ".robot",
         "codemirror_mode": "robotframework",
         "pygments_lexer": "robotframework",
@@ -114,6 +114,8 @@ class RobotKernel(DisplayKernel):
         line, offset = line_at_cursor(code, cursor_pos)
         line_cursor = cursor_pos - offset
         needle = re.split(r"\s{2,}|\t| \| ", line[:line_cursor])[-1].lstrip()
+        # default type for returned metadata "_jupyter_types_experimental.type"
+        metadata_type = "class"
 
         self.log.debug("Completing text: %s", needle)
 
@@ -133,6 +135,7 @@ class RobotKernel(DisplayKernel):
             if len(line) > line_cursor and line[line_cursor] == "}":
                 cursor_pos += 1
                 needle += "}"
+            metadata_type = "variable"
 
         elif is_selector(needle):
             self.log.debug("Context: Selenium or Appium selector")
@@ -142,18 +145,22 @@ class RobotKernel(DisplayKernel):
                 self.robot_connections, ["RPA.Browser", "selenium", "jupyter", "appium"]
             ):
                 matches = get_selector_completions(needle.rstrip(), driver)
+            metadata_type = "variable"
 
         elif is_autoit_selector(needle):
             self.log.debug("Context: AutoIt selector")
             matches = get_autoit_selector_completions(needle)
+            metadata_type = "variable"
 
         elif is_white_selector(needle):
             self.log.debug("Context: WhiteLibrary selector")
             matches = get_white_selector_completions(needle)
+            metadata_type = "variable"
 
         elif is_win32_selector(needle):
             self.log.debug("Context: Win32 selector")
             matches = get_win32_selector_completions(needle)
+            metadata_type = "variable"
 
         elif context == "__settings__" and any(
             [
@@ -165,6 +172,7 @@ class RobotKernel(DisplayKernel):
         ):
             self.log.debug("Context: Library name")
             matches = complete_libraries(needle.lower())
+            metadata_type = "class"
 
         else:
             self.log.debug("Context: Keywords or Built-ins")
@@ -182,6 +190,7 @@ class RobotKernel(DisplayKernel):
                 self.robot_catalog["keywords"],
                 context,
             )
+            metadata_type = "function"
 
         self.log.debug("Available completions: %s", matches)
 
@@ -189,7 +198,10 @@ class RobotKernel(DisplayKernel):
             "matches": matches,
             "cursor_end": cursor_pos,
             "cursor_start": cursor_pos - len(needle),
-            "metadata": {},
+            "metadata": {"_jupyter_types_experimental": [
+                {"start": cursor_pos - len(needle), "end": cursor_pos, "text": item, "type": metadata_type} for item in
+                matches],
+            },
             "status": "ok",
         }
 
