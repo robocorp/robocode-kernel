@@ -99,7 +99,7 @@ def readable_keyword(s):
             library, name = s.rsplit(".", 1)
             return library + "." + name[0:].title()
         else:
-            return s[0:].title()
+            return s
     else:
         return s
 

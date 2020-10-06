@@ -412,6 +412,8 @@ states.keywords = [
 
 /** a keyword name fragment before an inline variable */
 const KEYWORD_WORD_BEFORE_VAR = /([^\s]*?(?=[\$&%@]\{))/i;
+/** a keyword containing spaces before a separator */
+const KEYWORD_WORD_WITH_SPACES_BEFORE_SEP = /(?:[^\t\n\r\|])+?(?=$|\t|\n|\r|  +)/;
 /** a keyword name fragment before a separator */
 const KEYWORD_WORD_BEFORE_SEP = /[^\s\|]+(?=$|[|]|\t|  +)/;
 /** a keyword name fragment before a non-separator whitespace character */
@@ -521,6 +523,7 @@ states.keyword_invocation = [
   r(/( \| |  +|\t+)/, TT.BK, { pop: true }),
   r(/ /, null),
   r(KEYWORD_WORD_BEFORE_VAR, TT.KW, { pop: true }),
+  r(KEYWORD_WORD_WITH_SPACES_BEFORE_SEP, TT.KW, { pop: true }),
   r(KEYWORD_WORD_BEFORE_SEP, TT.KW, { pop: true }),
   r(KEYWORD_WORD_BEFORE_WS, TT.KW),
   ...base

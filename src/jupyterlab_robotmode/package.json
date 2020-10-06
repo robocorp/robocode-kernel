@@ -1,16 +1,16 @@
 {
   "name": "jupyterlab_robotmode",
-  "version": "3.0.2",
+  "version": "3.1.0",
   "description": "A JupyterLab extensions, which adds CodeMirror mode for Robot Framework syntax",
   "author": "Asko Soukka",
   "bugs": {
     "url": "https://github.com/robots-from-jupyter/robotkernel/issues"
   },
   "dependencies": {
-    "@jupyterlab/application": ">=1.2.6"
+    "@jupyterlab/application": "2.2.4"
   },
   "peerDependencies": {
-    "codemirror": "~5.39.0"
+    "codemirror": "~5.53.2"
   },
   "devDependencies": {
     "cross-env": "^7.0.2",
@@ -36,9 +36,10 @@
     "url": "https://github.com/robots-from-jupyter/robotkernel.git"
   },
   "scripts": {
-    "build": "tsc",
-    "clean": "rimraf lib",
+    "build": "npm run clean && tsc",
+    "clean": "rimraf lib *.tgz",
     "watch": "tsc -w",
+    "package": "npm pack",
     "prepublishOnly": "cross-env NODE_ENV=production npm run build"
   },
   "types": "lib/index.d.ts"
