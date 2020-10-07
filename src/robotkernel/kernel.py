@@ -190,7 +190,7 @@ class RobotKernel(DisplayKernel):
                 self.robot_catalog["keywords"],
                 context,
             )
-            metadata_type = "function"
+            metadata_type = "method"
 
         self.log.debug("Available completions: %s", matches)
 
