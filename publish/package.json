@@ -1,0 +1,17 @@
+{
+  "name": "@robocorp/robocode-kernel",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "node ./scripts/build.js"
+  },
+  "author": "Robocorp",
+  "license": "BSD-3-Clause",
+  "files": [
+    "dist/**/*"
+  ],
+  "devDependencies": {
+    "shelljs": "^0.8.4"
+  }
+}

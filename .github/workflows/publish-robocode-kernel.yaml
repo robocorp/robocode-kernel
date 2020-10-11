@@ -1,15 +1,11 @@
 # https://dev.to/michi/publish-to-npm-automatically-with-github-actions-5805
 # https://docs.github.com/en/free-pro-team@latest/actions/guides/publishing-nodejs-packages
 
-name: publish-jupyterlab_robotmode
+name: publish-robocode-kernel
 
 on:
   release:
     types: [created]
-
-defaults:
-  run:
-    working-directory: src/jupyterlab_robotmode
 
 jobs:
   build:
@@ -18,20 +14,27 @@ jobs:
     - uses: actions/checkout@v2
       with:
         ref: ${{ github.event.release.target_commitish }}
+    - uses: actions/setup-ruby@v1
+      with:
+        ruby-version: '2.5'
+    - uses: actions/setup-python@v1
+      with:
+        python-version: '3.7'
     - uses: actions/setup-node@v1
       with:
         node-version: '12.x'
         registry-url: 'https://npm.pkg.github.com'
         scope: '@robocorp'
-    - run: npm ci
-    - run: git config --global user.name "release-jupyterlab_robotmode"
-    - run: git config --global user.email "release-jupyterlab_robotmode@example.com"
-    - run: npm version ${{ github.event.release.tag_name }} --allow-same-version
-    - run: npm run build
-    - run: npm test
-    - run: npm publish
+    - run: rake what
+    - run: rake envsetup
+    - run: rake package
+    - run: |
+        npm ci
+        git config --global user.name "publish-robocode-kernel"
+        git config --global user.email "publish-robocode-kernel@example.com"
+        npm version ${{ github.event.release.tag_name }} --allow-same-version
+        npm run build
+        npm publish
+      working-directory: publish
       env:
         NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#    - run: git push
-#      env:
-#        github-token: ${{ secrets.GITHUB_TOKEN }}
