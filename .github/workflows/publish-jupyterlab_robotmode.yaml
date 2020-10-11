@@ -1,0 +1,37 @@
+# https://dev.to/michi/publish-to-npm-automatically-with-github-actions-5805
+# https://docs.github.com/en/free-pro-team@latest/actions/guides/publishing-nodejs-packages
+
+name: publish-jupyterlab_robotmode
+
+on:
+  release:
+    types: [created]
+
+defaults:
+  run:
+    working-directory: src/jupyterlab_robotmode
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: ${{ github.event.release.target_commitish }}
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+        registry-url: 'https://npm.pkg.github.com'
+        scope: '@robocorp'
+    - run: npm ci
+    - run: git config --global user.name "release-jupyterlab_robotmode"
+    - run: git config --global user.email "release-jupyterlab_robotmode@example.com"
+    - run: npm version ${{ github.event.release.tag_name }}
+    - run: npm run build
+    - run: npm test
+    - run: npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#    - run: git push
+#      env:
+#        github-token: ${{ secrets.GITHUB_TOKEN }}

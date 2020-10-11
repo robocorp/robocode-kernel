@@ -1,10 +1,10 @@
 {
-  "name": "jupyterlab_robotmode",
+  "name": "@robocorp/jupyterlab_robotmode",
   "version": "3.2.0",
   "description": "A JupyterLab extensions, which adds CodeMirror mode for Robot Framework syntax",
   "author": "Asko Soukka",
   "bugs": {
-    "url": "https://github.com/robots-from-jupyter/robotkernel/issues"
+    "url": "https://github.com/robocorp/robocode-kernel/issues"
   },
   "dependencies": {
     "@jupyterlab/application": "2.2.4"
@@ -20,7 +20,7 @@
   "files": [
     "{lib,style}/**/*.{css,d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}"
   ],
-  "homepage": "https://github.com/robots-from-jupyter/robotkernel",
+  "homepage": "https://github.com/robocorp/robocode-kernel",
   "jupyterlab": {
     "extension": "lib/plugin.js"
   },
@@ -33,7 +33,7 @@
   "main": "lib/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/robots-from-jupyter/robotkernel.git"
+    "url": "https://github.com/robocorp/robocode-kernel.git"
   },
   "scripts": {
     "build": "npm run clean && tsc",
