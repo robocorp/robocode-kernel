@@ -22,6 +22,7 @@ syntax: glob
 /selenium-screenshot-*.png
 /src/jupyterlab_robotmode/lib/
 /src/jupyterlab_robotmode/node_modules/
+/src/jupyterlab_robotmode/robocorp_jupyterlab_robotmode/labextension/
 /tmp/
 /Untitle*.ipynb
 

@@ -42,13 +42,6 @@ RobotKernel can be installed using the usual Python package manager tools, like 
 
    $ pip install robotkernel
 
-For JupyterLab it is recommended to also install the Robot Framework syntax highlighting and Jupyter widgets support:
-
-.. code:: bash
-
-   $ jupyter labextension install jupyterlab_robotmode
-   $ jupyter labextension install @jupyter-widgets/jupyterlab-manager
-
 For some environments it might be required to run the following command to manually register robotkernel as an available Jupyter kernel:
 
 .. code:: bash
