@@ -3,6 +3,7 @@ from io import StringIO
 from ipykernel.comm import CommManager
 from ipykernel.kernelbase import Kernel
 from ipykernel.zmqshell import ZMQInteractiveShell
+from ipykernel.jsonutil import json_clean
 from robotkernel.constants import THROBBER
 from traitlets import Any
 from traitlets import Instance
@@ -79,7 +80,7 @@ class DisplayKernel(Kernel):
                 self.iopub_socket,
                 "display_data",
                 {
-                    "data": data or {},
+                    "data": json_clean(data) if data else {},
                     "metadata": metadata or {},
                     "transient": {"display_id": display_id},
                 },
@@ -90,7 +91,7 @@ class DisplayKernel(Kernel):
             self.iopub_socket,
             "update_display_data",
             {
-                "data": data or {},
+                "data": json_clean(data) if data else {},
                 "metadata": metadata or {},
                 "transient": {"display_id": display_id},
             },
@@ -101,7 +102,7 @@ class DisplayKernel(Kernel):
             self.iopub_socket,
             "execute_result",
             {
-                "data": data or {},
+                "data": json_clean(data) if data else {},
                 "metadata": metadata or {},
                 "transient": {"display_id": display_id},
                 "execution_count": self.execution_count,
