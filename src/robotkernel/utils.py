@@ -239,7 +239,7 @@ def to_mime_and_metadata(obj) -> (dict, dict):  # noqa: C901
                 {"application/json": data, "text/html": f"<pre>{to_html(obj)}</pre>"},
                 metadata,
             )
-    except (TypeError, JSONDecodeError):
+    except (TypeError, JSONDecodeError, UnicodeDecodeError):
         pass
     try:
         return {"text/html": to_html(obj)}, {}
