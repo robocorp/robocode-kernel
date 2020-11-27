@@ -7,22 +7,24 @@
     "url": "https://github.com/robocorp/robocode-kernel/issues"
   },
   "dependencies": {
-    "@jupyterlab/application": "2.2.4"
-  },
-  "peerDependencies": {
-    "codemirror": "~5.53.2"
+    "@jupyterlab/application": "^3.0.0-rc.6",
+    "@jupyterlab/codemirror": "^3.0.0-rc.6"
   },
   "devDependencies": {
+    "@types/codemirror": "^0.0.97",
+    "@jupyterlab/builder": "^3.0.0-rc.7",
     "cross-env": "^7.0.2",
-    "rimraf": "~3.0.2",
-    "typescript": "~3.8.3"
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.2",
+    "typescript": "~4.0.3"
   },
   "files": [
     "{lib,style}/**/*.{css,d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}"
   ],
   "homepage": "https://github.com/robocorp/robocode-kernel",
   "jupyterlab": {
-    "extension": "lib/plugin.js"
+    "extension": "lib/plugin.js",
+    "outputDir": "robocorp_jupyterlab_robotmode/labextension"
   },
   "keywords": [
     "jupyter",
@@ -36,11 +38,22 @@
     "url": "https://github.com/robocorp/robocode-kernel.git"
   },
   "scripts": {
-    "build": "npm run clean && tsc",
-    "clean": "rimraf lib *.tgz",
-    "watch": "tsc -w",
+    "build": "jlpm run build:lib && jlpm run build:labextension:dev",
+    "build:labextension": "jupyter labextension build .",
+    "build:labextension:dev": "jupyter labextension build --development True .",
+    "build:lib": "tsc",
+    "build:prod": "jlpm run build:lib && jlpm run build:labextension",
+    "clean": "jlpm run clean:lib",
+    "clean:all": "jlpm run clean:lib && jlpm run clean:labextension",
+    "clean:labextension": "rimraf robocorp_jupyterlab_robotmode/labextension",
+    "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
+    "install:extension": "jupyter labextension develop --overwrite .",
     "package": "npm pack",
-    "prepublishOnly": "cross-env NODE_ENV=production npm run build"
+    "prepare": "jlpm run clean && jlpm run build:prod",
+    "prepublishOnly": "cross-env NODE_ENV=production npm run build",
+    "watch": "run-p watch:src watch:labextension",
+    "watch:labextension": "jupyter labextension watch .",
+    "watch:src": "tsc -w"
   },
   "types": "lib/index.d.ts"
 }
