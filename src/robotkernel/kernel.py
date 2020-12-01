@@ -42,6 +42,7 @@ from robotkernel.utils import get_keyword_doc
 from robotkernel.utils import get_lunr_completions
 from robotkernel.utils import lunr_builder
 from robotkernel.utils import lunr_query
+from robotkernel.utils import remove_prefix
 from robotkernel.utils import scored_results
 from robotkernel.utils import yield_current_connection
 
@@ -171,9 +172,15 @@ class RobotKernel(DisplayKernel):
             ]
         ):
             self.log.debug("Context: Library name")
-            matches = complete_libraries(needle.lower())
-            metadata_type = "class"
 
+            needle = needle.lower()
+            needle = remove_prefix(needle, 'library ')
+            needle = remove_prefix(needle, 'import library ')
+            needle = remove_prefix(needle, 'reload library ')
+            needle = remove_prefix(needle, 'get library instance ')
+
+            matches = complete_libraries(needle)
+            metadata_type = "class"
         else:
             self.log.debug("Context: Keywords or Built-ins")
             # Clear selector completion highlights

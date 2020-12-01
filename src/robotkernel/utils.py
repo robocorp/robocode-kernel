@@ -92,6 +92,12 @@ def lunr_builder(ref, fields):
     return builder
 
 
+def remove_prefix(value, prefix):
+    if value.startswith(prefix):
+        value = value[len(prefix):]
+    return value
+
+
 def readable_keyword(s):
     """Return keyword in title case."""
     if s and not s.startswith("*") and not s.startswith("["):
