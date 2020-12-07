@@ -206,6 +206,8 @@ class RobotKernel(DisplayKernel):
         }
 
     def do_inspect(self, code, cursor_pos, detail_level=0):
+        # don't cache robot_inspect_data
+        self.robot_inspect_data = {}
         cursor_pos = cursor_pos is None and len(code) or cursor_pos
         line, offset = line_at_cursor(code, cursor_pos)
         line_cursor = cursor_pos - offset
