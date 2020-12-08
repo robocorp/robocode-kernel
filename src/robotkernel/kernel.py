@@ -108,6 +108,11 @@ class RobotKernel(DisplayKernel):
                 driver["instance"].quit()
         self.robot_connections = []
 
+        reply_content = {
+            "restart": restart,
+        }
+        return reply_content
+
     def do_complete(self, code, cursor_pos):
         context = detect_robot_context(code, cursor_pos)
         cursor_pos = cursor_pos is None and len(code) or cursor_pos
