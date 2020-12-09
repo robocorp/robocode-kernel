@@ -9,41 +9,30 @@ from collections import OrderedDict
 from IPython.utils.tokenutil import line_at_cursor
 from ipykernel.kernelapp import IPKernelApp
 
+from robot.running.model import TestSuite
+from robot.running.builder.testsettings import TestDefaults
 from robotkernel import __version__
 from robotkernel.completion_finders import complete_libraries
-from robotkernel.constants import CONTEXT_LIBRARIES
-from robotkernel.constants import HAS_NBIMPORTER
-from robotkernel.constants import VARIABLE_REGEXP
+from robotkernel.constants import CONTEXT_LIBRARIES, HAS_NBIMPORTER, VARIABLE_REGEXP
 from robotkernel.display import DisplayKernel
 from robotkernel.exceptions import BrokenOpenConnection
-from robotkernel.executors import execute_python
-from robotkernel.executors import execute_robot
-from robotkernel.listeners import AppiumConnectionsListener
-from robotkernel.listeners import JupyterConnectionsListener
-from robotkernel.listeners import RobotKeywordsIndexerListener
-from robotkernel.listeners import RobotVariablesListener
-from robotkernel.listeners import RpaBrowserConnectionsListener
-from robotkernel.listeners import SeleniumConnectionsListener
-from robotkernel.listeners import WhiteLibraryListener
-from robotkernel.monkeypatches import inject_libdoc_ipynb_support
-from robotkernel.monkeypatches import inject_robot_ipynb_support
-from robotkernel.selectors import clear_selector_highlights
-from robotkernel.selectors import get_autoit_selector_completions
-from robotkernel.selectors import get_selector_completions
-from robotkernel.selectors import get_white_selector_completions
-from robotkernel.selectors import get_win32_selector_completions
-from robotkernel.selectors import is_autoit_selector
-from robotkernel.selectors import is_selector
-from robotkernel.selectors import is_white_selector
-from robotkernel.selectors import is_win32_selector
-from robotkernel.utils import close_current_connection
-from robotkernel.utils import detect_robot_context
-from robotkernel.utils import get_keyword_doc
-from robotkernel.utils import get_lunr_completions
-from robotkernel.utils import lunr_builder
-from robotkernel.utils import lunr_query
-from robotkernel.utils import scored_results
-from robotkernel.utils import yield_current_connection
+from robotkernel.builders import clean_items, populate_suite
+from robotkernel.executors import execute_python, execute_robot
+from robotkernel.listeners import (
+    AppiumConnectionsListener, JupyterConnectionsListener, RobotKeywordsIndexerListener,
+    RobotVariablesListener, RpaBrowserConnectionsListener, SeleniumConnectionsListener,
+    WhiteLibraryListener
+)
+from robotkernel.monkeypatches import inject_libdoc_ipynb_support, inject_robot_ipynb_support
+from robotkernel.selectors import (
+    clear_selector_highlights, get_autoit_selector_completions, get_selector_completions,
+    get_white_selector_completions, get_win32_selector_completions, is_autoit_selector,
+    is_selector, is_white_selector, is_win32_selector
+)
+from robotkernel.utils import (
+    close_current_connection, detect_robot_context, get_keyword_doc, get_lunr_completions,
+    lunr_builder, lunr_query, scored_results, yield_current_connection
+)
 
 
 PID = os.getpid()
@@ -84,6 +73,10 @@ class RobotKernel(DisplayKernel):
         # Sticky connection cache (e.g. for webdrivers)
         self.robot_connections = []
 
+        # Cache keywords
+        self.new_keywords = []
+        self.keywords = []
+
         # Searchable index for keyword autocomplete documentation
         builder = lunr_builder("dottedname", ["dottedname", "name"])
         self.robot_catalog = {
@@ -97,6 +90,10 @@ class RobotKernel(DisplayKernel):
         for name, keywords in CONTEXT_LIBRARIES.items():
             # noinspection PyProtectedMember
             populator._library_import(keywords, name)
+
+        # Create test suite
+        self.suite = TestSuite(name="Robocode Lab", source=os.getcwd())
+        self.defaults = TestDefaults(None)
 
     def do_shutdown(self, restart):
         super(RobotKernel, self).do_shutdown(restart)
@@ -291,7 +288,7 @@ class RobotKernel(DisplayKernel):
             self.robot_variables.extend(VARIABLE_REGEXP.findall(code, re.U & re.M))
 
             # Configure listeners
-            listeners = [
+            self.listeners = [
                 RpaBrowserConnectionsListener(self.robot_connections),
                 SeleniumConnectionsListener(self.robot_connections),
                 JupyterConnectionsListener(self.robot_connections),
@@ -301,12 +298,38 @@ class RobotKernel(DisplayKernel):
                 RobotVariablesListener(self.robot_suite_variables),
             ]
 
+            # Build suite
+            try:
+                populate_suite(code, self.suite, self.defaults)
+            except Exception as e:
+                if not silent:
+                    self.send_error(
+                        {
+                            "ename": e.__class__.__name__,
+                            "evalue": str(e),
+                            "traceback": list(format_exc().splitlines()),
+                        }
+                    )
+                return {
+                    "status": "error",
+                    "ename": e.__class__.__name__,
+                    "evalue": str(e),
+                    "traceback": list(format_exc().splitlines()),
+                }
+
+            # Keep new keywords in memory, they are used for constructing the widgets
+            self.new_keywords = [item for item in self.suite.resource.keywords._items if item not in self.keywords]
+            self.keywords = list(self.suite.resource.keywords._items)
+
             # Execute test case
-            result = execute_robot(self, code, self.robot_history, listeners, silent,)
+            result = execute_robot(self, self.suite, silent)
 
             # Save history
             if result["status"] == "ok":
                 self.robot_history[self.robot_cell_id or str(uuid.uuid4())] = code
+
+            # Clean the tests that were run
+            clean_items(self.suite.tests)
 
             return result
 

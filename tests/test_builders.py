@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-from robotkernel.builders import build_suite
+from robot.running.model import TestSuite
+from robot.running.builder.testsettings import TestDefaults
+
+from robotkernel.builders import populate_suite
 
 
 TEST_SUITE = """\
@@ -24,6 +27,9 @@ Get head
 
 
 def test_string():
-    suite = build_suite(TEST_SUITE, {})
+    suite = TestSuite()
+
+    populate_suite(TEST_SUITE, suite, TestDefaults())
+
     assert len(suite.resource.keywords) == 1
     assert len(suite.tests) == 1
