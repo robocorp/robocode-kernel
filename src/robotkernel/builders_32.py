@@ -26,7 +26,7 @@ def _get_rpa_mode(data):
 
 def build_suite(code: str, cell_history: Dict[str, str], data_only: bool = False):
     # Init
-    suite = TestSuite(name="Robocode Lab", source=os.getcwd())
+    suite = TestSuite(name="Robocorp Lab", source=os.getcwd())
     defaults = TestDefaults(None)
 
     # Populate history
