@@ -25,6 +25,8 @@ jobs:
         node-version: '12.x'
         registry-url: 'https://npm.pkg.github.com'
         scope: '@robocorp'
+    - name: Set pip version
+      run: python -m pip install --force-reinstall pip==20.2.4
     - run: rake what
     - run: rake envsetup
     - run: rake package
