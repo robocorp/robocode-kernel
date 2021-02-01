@@ -258,20 +258,22 @@ class RpaBrowserConnectionsListener:
 
     # noinspection PyUnusedLocal,PyProtectedMember
     def end_suite(self, name, attributes):
-        try:
-            instance = BuiltIn().get_library_instance("RPA.Browser")
-            clear_drivers(self.drivers, "RPA.Browser")
-            self.drivers.extend(get_webdrivers(instance._drivers, "RPA.Browser"))
-        except RuntimeError:
-            pass
+        for library in ("RPA.Browser.Selenium", "RPA.Browser"):
+            try:
+                instance = BuiltIn().get_library_instance(library)
+                clear_drivers(self.drivers, library)
+                self.drivers.extend(get_webdrivers(instance._drivers, library))
+            except RuntimeError:
+                pass
 
     # noinspection PyUnusedLocal,PyProtectedMember
     def start_suite(self, name, attributes):
-        try:
-            instance = BuiltIn().get_library_instance("RPA.Browser")
-            set_webdrivers(self.drivers, instance._drivers, "RPA.Browser")
-        except RuntimeError:
-            pass
+        for library in ("RPA.Browser.Selenium", "RPA.Browser"):
+            try:
+                instance = BuiltIn().get_library_instance(library)
+                set_webdrivers(self.drivers, instance._drivers, library)
+            except RuntimeError:
+                pass
 
 
 class JupyterConnectionsListener:

@@ -147,7 +147,7 @@ class RobotKernel(DisplayKernel):
             self.log.debug("Current WebDrivers: %s", self.robot_connections)
             matches = []
             for driver in yield_current_connection(
-                self.robot_connections, ["RPA.Browser", "selenium", "jupyter", "appium"]
+                self.robot_connections, ["RPA.Browser.Selenium", "RPA.Browser", "selenium", "jupyter", "appium"]
             ):
                 matches = get_selector_completions(needle.rstrip(), driver)
             metadata_type = "variable"
@@ -183,7 +183,7 @@ class RobotKernel(DisplayKernel):
             self.log.debug("Context: Keywords or Built-ins")
             # Clear selector completion highlights
             for driver in yield_current_connection(
-                self.robot_connections, ["RPA.Browser", "selenium", "jupyter"]
+                self.robot_connections, ["RPA.Browser.Selenium", "RPA.Browser", "selenium", "jupyter"]
             ):
                 try:
                     clear_selector_highlights(driver)
@@ -264,7 +264,7 @@ class RobotKernel(DisplayKernel):
 
         # Clear selector completion highlights
         for driver in yield_current_connection(
-            self.robot_connections, ["RPA.Browser", "selenium", "jupyter"]
+            self.robot_connections, ["RPA.Browser.Selenium", "RPA.Browser", "selenium", "jupyter"]
         ):
             try:
                 clear_selector_highlights(driver)
