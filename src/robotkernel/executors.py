@@ -63,20 +63,14 @@ def normalize_argument(name):
     return re.sub(r"\W", "_", re.sub(r"^[^\w]*|[^\w]*$", "", name, re.U), re.U)
 
 
-def not_empty(value):
-    """Check if value is an empty container (str, list, dict)
-    in a way that tries to be compatible with more esoteric types,
-    such as pandas DataFrames.
+def is_value(value):
+    """Check if value is defined in a way that tries to be compatible with
+    more esoteric types, such as pandas DataFrames.
     """
     try:
-        return bool(value)
-    except ValueError:
-        pass
-    try:
-        return bool(len(value))
-    except TypeError:
-        pass
-    return True
+        return value is not None and value != "" and value != b""
+    except Exception:
+        return True
 
 
 def execute_ipywidget(
@@ -292,7 +286,7 @@ def run_robot_suite(
                 {"ename": "", "evalue": "", "traceback": stdout.getvalue().splitlines()}
             )
     # Display result of the last keyword
-    elif not silent and returns and not_empty(returns[-1]):
+    elif not silent and returns and is_value(returns[-1]):
         bundle, metadata = to_mime_and_metadata(returns[-1])
         if bundle:
             kernel.send_execute_result(bundle, metadata)
