@@ -279,8 +279,13 @@ def run_robot_suite(
 
     stats = results.statistics
 
+    try:
+        totalFailed = stats.total.critical.failed
+    except:
+        totalFailed = stats.total.failed
+
     # Reply error on error
-    if stats.total.critical.failed:
+    if totalFailed:
         if not silent:
             kernel.send_error(
                 {"ename": "", "evalue": "", "traceback": stdout.getvalue().splitlines()}
@@ -329,7 +334,7 @@ def run_robot_suite(
             )
 
     # Reply ok on pass
-    if stats.total.critical.failed:
+    if totalFailed:
         return {
             "status": "error",
             "ename": "",

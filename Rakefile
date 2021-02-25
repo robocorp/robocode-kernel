@@ -17,9 +17,17 @@ task :tmp do
     mkdir('tmp')
 end
 
-desc 'Setup build environment'
+desc 'Setup build environment RobotFW32'
 task :envsetup => :tmp do
     sh "#{PYTHON} -m pip install -r requirements-rf32.txt"
+    sh "#{PYTHON} -m pip install -r devrequirements.txt"
+    sh "#{PYTHON} -m pip install -e ."
+    sh "#{PYTHON} -m pip freeze"
+end
+
+desc 'Setup build environment RobotFW40'
+task :envsetup40 => :tmp do
+    sh "#{PYTHON} -m pip install -r requirements-rf40.txt"
     sh "#{PYTHON} -m pip install -r devrequirements.txt"
     sh "#{PYTHON} -m pip install -e ."
     sh "#{PYTHON} -m pip freeze"
