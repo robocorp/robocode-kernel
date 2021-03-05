@@ -1,0 +1,11 @@
+
+# This is a default micromamba configuration file
+
+name: default
+
+channels:
+  - conda-forge
+
+dependencies:
+  - nodejs
+  - python

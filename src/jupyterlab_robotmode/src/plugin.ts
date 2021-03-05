@@ -3,8 +3,6 @@
   Distributed under the terms of the BSD-3-Clause License
 */
 
-/// <reference path="../node_modules/@jupyterlab/codemirror/typings/codemirror/codemirror.d.ts" />
-
 import {
   JupyterFrontEnd, JupyterFrontEndPlugin
 } from '@jupyterlab/application';
